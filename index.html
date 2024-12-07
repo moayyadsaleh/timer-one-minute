@@ -18,10 +18,10 @@
       }
 
       .phone {
-        width: 150px; /* Reduced width */
-        height: 300px; /* Reduced height */
+        width: 150px;
+        height: 300px;
         background: linear-gradient(145deg, #1e1e1e, #2c2c2c);
-        border-radius: 20px; /* Adjusted border-radius */
+        border-radius: 20px;
         border: 3px solid #111;
         position: relative;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5),
@@ -35,7 +35,7 @@
 
       .phone::before {
         content: "";
-        width: 50px; /* Smaller notch */
+        width: 50px;
         height: 4px;
         background: #555;
         border-radius: 10px;
@@ -65,34 +65,60 @@
         justify-content: center;
         align-items: center;
         position: relative;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        width: 5px;
+        height: 100%;
+        background: #ddd;
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .progress-bar-fill {
+        width: 100%;
+        height: 100%;
+        background: #4caf50;
+        position: absolute;
+        bottom: 0;
+        transition: height 1s linear;
       }
 
       #timer {
-        font-size: 32px; /* Smaller font size */
+        font-size: 32px;
         font-weight: bold;
         color: #222;
+        margin-bottom: 10px;
+      }
+
+      .time-input {
+        margin-bottom: 10px;
+        display: flex;
+        gap: 5px;
+      }
+
+      .time-input input {
+        width: 40px;
+        padding: 5px;
+        font-size: 16px;
+        text-align: center;
+        border: 2px solid #ccc;
+        border-radius: 5px;
       }
 
       .buttons {
         position: absolute;
-        bottom: 20px; /* Reduced bottom margin */
+        bottom: 20px;
         display: flex;
-        gap: 10px; /* Reduced gap */
+        gap: 10px;
       }
 
       .button {
-        width: 40px; /* Smaller button */
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s;
-      }
-      .button {
-        width: 35px; /* Smaller button */
+        width: 35px;
         height: 35px;
         border-radius: 50%;
         display: flex;
@@ -104,8 +130,8 @@
       }
 
       .button-icon {
-        width: 16px; /* Smaller icon size */
-        height: 16px;
+        width: 18px;
+        height: 18px;
         fill: #ffffff;
       }
 
@@ -128,31 +154,59 @@
       .reset-button {
         background-color: #3498db;
       }
-
-      .button-icon {
-        width: 18px; /* Smaller icon size */
-        height: 18px;
-        fill: #ffffff;
-      }
     </style>
   </head>
   <body>
     <div class="phone">
       <div class="front-camera"></div>
       <div class="screen">
+        <div class="progress-bar">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
         <div id="timer">05:00</div>
+        <div class="time-input">
+          <input
+            type="number"
+            id="minutes-input"
+            placeholder="Min"
+            min="0"
+            value="5"
+            aria-label="Set minutes"
+          />
+          <input
+            type="number"
+            id="seconds-input"
+            placeholder="Sec"
+            min="0"
+            max="59"
+            value="0"
+            aria-label="Set seconds"
+          />
+        </div>
         <div class="buttons">
-          <div class="button start-button" onclick="startTimer()">
+          <div
+            class="button start-button"
+            onclick="startTimer()"
+            aria-label="Start Timer"
+          >
             <svg class="button-icon" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
-          <div class="button stop-button" onclick="stopTimer()">
+          <div
+            class="button stop-button"
+            onclick="stopTimer()"
+            aria-label="Stop Timer"
+          >
             <svg class="button-icon" viewBox="0 0 24 24">
               <path d="M6 6h12v12H6z" />
             </svg>
           </div>
-          <div class="button reset-button" onclick="resetTimer()">
+          <div
+            class="button reset-button"
+            onclick="resetTimer()"
+            aria-label="Reset Timer"
+          >
             <svg class="button-icon" viewBox="0 0 24 24">
               <path d="M12 5v7h7v-2h-5V5h-2z" />
             </svg>
@@ -170,12 +224,30 @@
       let isRunning = false;
       const timerDisplay = document.getElementById("timer");
       const alarmSound = document.getElementById("alarm-sound");
+      const minutesInput = document.getElementById("minutes-input");
+      const secondsInput = document.getElementById("seconds-input");
+      const progressBarFill = document.getElementById("progress-bar-fill");
+
+      function validateInputs() {
+        if (minutesInput.value < 0) minutesInput.value = 0;
+        if (secondsInput.value < 0) secondsInput.value = 0;
+        if (secondsInput.value > 59) secondsInput.value = 59;
+      }
+
+      minutesInput.addEventListener("change", validateInputs);
+      secondsInput.addEventListener("change", validateInputs);
 
       function startTimer() {
         if (isRunning) return;
         isRunning = true;
+
+        timerDuration =
+          parseInt(minutesInput.value) * 60 + parseInt(secondsInput.value);
+        timeLeft = timerDuration;
+        updateDisplay();
+        updateProgressBar();
+
         timerInterval = setInterval(updateTimer, 1000);
-        updateTimer();
       }
 
       function stopTimer() {
@@ -187,6 +259,8 @@
         stopTimer();
         timeLeft = timerDuration;
         updateDisplay();
+        updateProgressBar();
+        timerDisplay.style.color = "#222";
       }
 
       function updateTimer() {
@@ -195,15 +269,22 @@
         timerDisplay.textContent = `${minutes}:${
           seconds < 10 ? "0" : ""
         }${seconds}`;
+        updateProgressBar();
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           isRunning = false;
           alarmSound.play();
+          timerDisplay.style.color = "red";
           alert("Time's up!");
         } else {
           timeLeft--;
         }
+      }
+
+      function updateProgressBar() {
+        const percentage = (timeLeft / timerDuration) * 100;
+        progressBarFill.style.height = `${percentage}%`;
       }
 
       function updateDisplay() {
