@@ -3,13 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Realistic Phone Timer</title>
+    <title>Storyline Phone Timer</title>
     <style>
       body {
-        font-family: "Arial", sans-serif;
+        font-family: Arial, sans-serif;
         background: #e0e0e0;
-        color: #ffffff;
-        text-align: center;
+        color: #fff;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -18,86 +17,58 @@
       }
 
       .phone {
-        width: 150px; /* Reduced width */
-        height: 300px; /* Reduced height */
-        background: linear-gradient(145deg, #1e1e1e, #2c2c2c);
-        border-radius: 20px; /* Adjusted border-radius */
-        border: 3px solid #111;
-        position: relative;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5),
-          inset 0 3px 6px rgba(255, 255, 255, 0.1);
-        overflow: hidden;
+        width: 100%;
+        max-width: 250px;
+        height: 500px;
+        background: #2c2c2c;
+        border-radius: 30px;
+        border: 5px solid #111;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-      }
-
-      .phone::before {
-        content: "";
-        width: 50px; /* Smaller notch */
-        height: 4px;
-        background: #555;
-        border-radius: 10px;
-        position: absolute;
-        top: 10px;
-      }
-
-      .front-camera {
-        width: 8px;
-        height: 8px;
-        background: #333;
-        border-radius: 50%;
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
+        padding: 10px;
       }
 
       .screen {
         width: 90%;
-        height: 90%;
+        height: 80%;
         background: #f5f5f5;
         border-radius: 20px;
-        box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        position: relative;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
       }
 
       #timer {
-        font-size: 32px; /* Smaller font size */
+        font-size: 28px;
         font-weight: bold;
         color: #222;
+        margin-bottom: 20px;
       }
 
       .buttons {
-        position: absolute;
-        bottom: 20px; /* Reduced bottom margin */
         display: flex;
-        gap: 10px; /* Reduced gap */
+        gap: 10px;
       }
 
       .button {
-        width: 40px; /* Smaller button */
-        height: 40px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         transition: transform 0.2s;
       }
 
       .button:hover {
         transform: scale(1.05);
-      }
-
-      .button:active {
-        transform: scale(0.9);
       }
 
       .start-button {
@@ -113,15 +84,14 @@
       }
 
       .button-icon {
-        width: 18px; /* Smaller icon size */
-        height: 18px;
-        fill: #ffffff;
+        width: 20px;
+        height: 20px;
+        fill: #fff;
       }
     </style>
   </head>
   <body>
     <div class="phone">
-      <div class="front-camera"></div>
       <div class="screen">
         <div id="timer">05:00</div>
         <div class="buttons">
